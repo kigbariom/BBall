@@ -8,4 +8,6 @@
 #include "Engine.h"
 #include "Net/UnrealNetwork.h"
 
+#define COLLISION_WEAPON ECC_GameTraceChannel1
+
 #endif
