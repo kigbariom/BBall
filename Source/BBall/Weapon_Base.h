@@ -7,6 +7,21 @@
 #include "Weapon_Base.generated.h"
 
 USTRUCT()
+struct FWeaponFX
+{
+	GENERATED_BODY()
+
+	/** Particle FX, bullet holes etc.*/
+	FWeaponFX()
+	{
+
+	}
+
+	UPROPERTY(EditDefaultsOnly)
+	UParticleSystem* GunshotParticles;
+};
+
+USTRUCT()
 struct FWeaponConfig
 {
 	GENERATED_BODY()
@@ -55,6 +70,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon Configuration")
 	FWeaponConfig WeaponConfig;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon Configuration")
+	FWeaponFX WeaponEffects;
 
 protected:
 

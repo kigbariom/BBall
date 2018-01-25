@@ -97,9 +97,15 @@ void AWeapon_Base::Fire()
 		return;
 	}
 
+	MulticastPlayShootingEffects();
+
 }
 
 void AWeapon_Base::MulticastPlayShootingEffects_Implementation()
 {
-
+	
+	if (WeaponEffects.GunshotParticles)
+	{
+		UGameplayStatics::SpawnEmitterAttached(WeaponEffects.GunshotParticles, GetRelevantWeaponMesh(), "Muzzle");
+	}
 }

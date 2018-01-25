@@ -147,6 +147,10 @@ void ABBallCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ABBallCharacter::BeginFire);
+	PlayerInputComponent->BindAction("Fire", IE_Released, this, &ABBallCharacter::EndFire);
+
+
 	// Bind movement events
 	PlayerInputComponent->BindAxis("MoveForward", this, &ABBallCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ABBallCharacter::MoveRight);
