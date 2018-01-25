@@ -33,8 +33,10 @@ struct FWeaponConfig
 		AmmoCost = 1;
 		SpareClips = 4;
 		ClipSize = 30;
-		BulletDamage = 30.f;
-		Range = 10000.f;
+		EquipTime = 0.2f;
+		HolsterTime = 0.1f;
+		ReloadTime = 2.0f;
+		BaseFOV = 90;
 	}
 
 	UPROPERTY(EditDefaultsOnly)
@@ -43,20 +45,26 @@ struct FWeaponConfig
 	UPROPERTY(EditDefaultsOnly)
 	FString WeaponDisplayName;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "Ammo")
 	int32 SpareClips;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "Ammo")
 	int32 ClipSize;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "Ammo")
 	int32 AmmoCost;
 
-	UPROPERTY(EditDefaultsOnly)
-	float BulletDamage;
+	UPROPERTY(EditDefaultsOnly, Category = "Timing")
+	float EquipTime;
 
-	UPROPERTY(EditDefaultsOnly)
-	float Range;
+	UPROPERTY(EditDefaultsOnly, Category = "Timing")
+	float HolsterTime;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Timing")
+	float ReloadTime;
+
+	UPROPERTY(EditDefaultsOnly, Category = "FOV")
+	int32 BaseFOV;
 };
 
 UCLASS()

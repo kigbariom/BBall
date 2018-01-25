@@ -6,6 +6,18 @@
 #include "Weapon_Base.h"
 #include "Weapon_Projectile.generated.h"
 
+USTRUCT()
+struct FProjectileWeaponConfig
+{
+	GENERATED_BODY()
+
+	FProjectileWeaponConfig()
+	{
+		
+	}
+
+};
+
 /**
  * 
  */
