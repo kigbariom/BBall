@@ -98,3 +98,8 @@ void AWeapon_Base::Fire()
 	}
 
 }
+
+void AWeapon_Base::MulticastPlayShootingEffects_Implementation()
+{
+
+}

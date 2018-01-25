@@ -42,13 +42,13 @@ public:
 
 protected:
 
-	//UFUNCTION(Server, Reliable, WithValidation)
-	//void ServerBeginFire();
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerBeginFire();
 
 	void BeginFire();
 
-	//UFUNCTION(Server, Reliable, WithValidation)
-	//void ServerEndFire();
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerEndFire();
 
 	void EndFire();
 

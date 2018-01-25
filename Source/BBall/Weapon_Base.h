@@ -74,8 +74,8 @@ protected:
 	UPROPERTY(Replicated)
 	class ABBallCharacter* HoldingPawn;
 
-	//UFUNCTION()
-	//void MulticasePlayShootingEffects();
+	UFUNCTION(NetMulticast, Unreliable)
+	void MulticastPlayShootingEffects();
 
 public:
 

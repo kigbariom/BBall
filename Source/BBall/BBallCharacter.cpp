@@ -73,21 +73,31 @@ void ABBallCharacter::SpawnDefaultWeapon()
 	}
 }
 
-//void ABBallCharacter::ServerBeginFire_Implementation()
-//{
-//	BeginFire();
-//}
+void ABBallCharacter::ServerBeginFire_Implementation()
+{
+	BeginFire();
+}
 
-//bool ABBallCharacter::ServerBeginFire_Validate()
-//{
-	//return true;
-//}
+bool ABBallCharacter::ServerBeginFire_Validate()
+{
+	return true;
+}
+
+void ABBallCharacter::ServerEndFire_Implementation()
+{
+	EndFire();
+}
+
+bool ABBallCharacter::ServerEndFire_Validate()
+{
+	return true;
+}
 
 void ABBallCharacter::BeginFire()
 {
 	if (Role < ROLE_Authority)
 	{
-		//ServerBeginFire();
+		ServerBeginFire();
 	}
 
 	if (CurrentWeapon)
@@ -147,16 +157,6 @@ void ABBallCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 }
-
-//void ABBallCharacter::ServerEndFire_Implementation()
-//{
-//	EndFire();
-//}
-
-//bool ABBallCharacter::ServerEndFire_Validate()
-//{
-//	return true;
-//}
 
 void ABBallCharacter::EndFire()
 {
