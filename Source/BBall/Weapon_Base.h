@@ -31,13 +31,14 @@ struct FWeaponConfig
 		AttachSocketName = "WeaponSocket";
 		WeaponDisplayName = "Weapon";
 		AmmoCost = 1;
-		SpareClips = 4;
-		ClipSize = 30;
+		SpareClips = 5;
+		ClipSize = 4;
 		EquipTime = 0.2f;
 		HolsterTime = 0.1f;
 		ReloadTime = 2.0f;
 		TimeBetweenShots = 0.8f;
 		BaseFOV = 90;
+		bReloadIndividually = true;
 	}
 
 	UPROPERTY(EditDefaultsOnly)
@@ -67,8 +68,12 @@ struct FWeaponConfig
 	UPROPERTY(EditDefaultsOnly, Category = "Timing")
 	float TimeBetweenShots;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Timing")
+	bool bReloadIndividually;
+
 	UPROPERTY(EditDefaultsOnly, Category = "FOV")
 	int32 BaseFOV;
+	
 };
 
 UCLASS()
@@ -109,6 +114,14 @@ protected:
 
 public:
 
+	UPROPERTY(Replicated)
+	int32 CurrentAmmo;
+
+	UPROPERTY(Replicated)
+	int32 CurrentAmmoInClip;
+
+	void Reload();
+
 	void OnEquip();
 	void OnUnEquip();
 
@@ -128,6 +141,16 @@ public:
 	void SetHoldingPawn(class ABBallCharacter* character);
 
 	USkeletalMeshComponent* GetRelevantWeaponMesh() const;
+
+public:
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE FString GetWeaponDisplayName() const { return WeaponConfig.WeaponDisplayName; }
 	
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE int32 GetAmmoInClip() const { return CurrentAmmoInClip; }
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE int32 GetCurrentAmmo() const { return CurrentAmmo; }
 	
 };

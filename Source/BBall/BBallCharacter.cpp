@@ -52,6 +52,7 @@ void ABBallCharacter::BeginPlay()
 
 	if (Role == ROLE_Authority)
 	{
+		Health = 100.f;
 		SpawnDefaultWeapon();
 	}
 }
@@ -119,6 +120,29 @@ void ABBallCharacter::SetWeapon(class AWeapon_Base* Weapon)
 	}
 }
 
+void ABBallCharacter::ServerReload_Implementation()
+{
+	Reload();
+}
+
+bool ABBallCharacter::ServerReload_Validate()
+{
+	return true;
+}
+
+void ABBallCharacter::Reload()
+{
+	if (Role < ROLE_Authority)
+	{
+		ServerReload();
+	}
+
+	if (CurrentWeapon)
+	{
+		CurrentWeapon->Reload();
+	}
+}
+
 void ABBallCharacter::OnRep_CurrentWeapon()
 {
 	if (CurrentWeapon)
@@ -133,6 +157,9 @@ void ABBallCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(ABBallCharacter, CurrentWeapon);
+	DOREPLIFETIME(ABBallCharacter, Health);
+	DOREPLIFETIME(ABBallCharacter, bIsDead);
+
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -150,6 +177,7 @@ void ABBallCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ABBallCharacter::BeginFire);
 	PlayerInputComponent->BindAction("Fire", IE_Released, this, &ABBallCharacter::EndFire);
 
+	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &ABBallCharacter::Reload);
 
 	// Bind movement events
 	PlayerInputComponent->BindAxis("MoveForward", this, &ABBallCharacter::MoveForward);
@@ -164,8 +192,31 @@ void ABBallCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 
 float ABBallCharacter::TakeDamage(float Damage, const FDamageEvent & DamageEvent, AController * Controller, AActor * Actor)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("I GOT HIT BY A BULLET"));
-	return 0.0f;
+	if (Role < ROLE_Authority)
+	{
+		return 0.f;
+	}
+
+	if (bIsDead)
+	{
+		return 0.f;
+	}
+
+	Health -= Damage;
+
+	if (Health > 0)
+	{
+		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+		if (AnimInstance && HitAnimation)
+		{
+			AnimInstance->Montage_Play(HitAnimation);
+		}
+	}
+	else
+	{
+		bIsDead = true;
+	}
+	return Damage;
 }
 
 void ABBallCharacter::EndFire()

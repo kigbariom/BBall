@@ -76,12 +76,26 @@ protected:
 	void SetWeapon(class AWeapon_Base* Weapon);
 
 	/** The player's current weapon*/
-	UPROPERTY(ReplicatedUsing = OnRep_CurrentWeapon)
+	UPROPERTY(ReplicatedUsing = OnRep_CurrentWeapon, BlueprintReadWrite)
 	class AWeapon_Base* CurrentWeapon;
+
+	void Reload();
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerReload();
 
 	/** On Rep Functions */
 	UFUNCTION()
 	void OnRep_CurrentWeapon();
+
+	UPROPERTY(Replicated)
+	float Health;
+
+	UPROPERTY(Replicated)
+	bool bIsDead;
+
+	UPROPERTY(EditDefaultsOnly)
+	UAnimMontage* HitAnimation;
 
 
 

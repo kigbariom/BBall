@@ -10,6 +10,8 @@ void AWeapon_Hitscan::Fire()
 	{
 		Super::Fire();
 
+		//Still calling Fire in child class if out of ammo, look in to that!!
+
 		UCameraComponent* PlayerCamera = HoldingPawn->GetFirstPersonCameraComponent();
 
 		FRandomStream RandStream(FMath::Rand());

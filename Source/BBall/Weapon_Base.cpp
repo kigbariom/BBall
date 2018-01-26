@@ -35,6 +35,9 @@ void AWeapon_Base::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLife
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	
 	DOREPLIFETIME(AWeapon_Base, HoldingPawn);
+	DOREPLIFETIME_CONDITION(AWeapon_Base, CurrentAmmo, COND_OwnerOnly);
+	DOREPLIFETIME_CONDITION(AWeapon_Base, CurrentAmmoInClip, COND_OwnerOnly);
+
 }
 
 USkeletalMeshComponent* AWeapon_Base::GetRelevantWeaponMesh() const
@@ -53,6 +56,12 @@ USkeletalMeshComponent* AWeapon_Base::GetRelevantWeaponMesh() const
 void AWeapon_Base::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (Role == ROLE_Authority)
+	{
+		CurrentAmmoInClip = WeaponConfig.ClipSize;
+		CurrentAmmo = WeaponConfig.ClipSize * WeaponConfig.SpareClips;
+	}
 	
 }
 
@@ -98,6 +107,18 @@ void AWeapon_Base::Fire()
 		return;
 	}
 
+	if (CurrentAmmoInClip <= 0)
+	{
+		if (CurrentAmmo <= 0)
+		{
+			return;
+		}
+		Reload();
+		return;
+	}
+
+	CurrentAmmoInClip--;
+
 	MulticastPlayShootingEffects();
 
 	GetWorldTimerManager().SetTimer(TimerHandle_RefireTimer, this, &AWeapon_Base::OnRefire, WeaponConfig.TimeBetweenShots, false);
@@ -119,4 +140,34 @@ void AWeapon_Base::MulticastPlayShootingEffects_Implementation()
 	{
 		UGameplayStatics::SpawnEmitterAttached(WeaponEffects.GunshotParticles, GetRelevantWeaponMesh(), "Muzzle");
 	}
+}
+
+void AWeapon_Base::Reload()
+{
+	if (Role < ROLE_Authority)
+	{
+		return;
+	}
+	if (CurrentAmmoInClip < WeaponConfig.ClipSize)
+	{
+		if (WeaponConfig.bReloadIndividually)
+		{
+			CurrentAmmo -= 1;
+			CurrentAmmoInClip += 1;
+
+			//MulticastPlayReloadFX
+		}
+		else
+		{
+			int32 AmmoPutInClip = FMath::Min(WeaponConfig.ClipSize - CurrentAmmoInClip, CurrentAmmo - CurrentAmmoInClip);
+			if (AmmoPutInClip >= 0)
+			{
+				CurrentAmmo -= AmmoPutInClip;
+				CurrentAmmoInClip += AmmoPutInClip;
+
+				//MulticastPlayReloadFX
+			}
+		}
+	}
+	
 }
