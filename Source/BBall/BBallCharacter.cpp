@@ -162,11 +162,17 @@ void ABBallCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 }
 
+float ABBallCharacter::TakeDamage(float Damage, const FDamageEvent & DamageEvent, AController * Controller, AActor * Actor)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("I GOT HIT BY A BULLET"));
+	return 0.0f;
+}
+
 void ABBallCharacter::EndFire()
 {
 	if (Role < ROLE_Authority)
 	{
-		//ServerEndFire();
+		ServerEndFire();
 	}
 
 	if (CurrentWeapon)

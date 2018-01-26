@@ -63,6 +63,8 @@ protected:
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 	// End of APawn interface
 
+	virtual float TakeDamage(float Damage, const FDamageEvent& DamageEvent, AController* Controller, AActor* Actor) override;
+
 	/** Gun related stuff*/
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class AWeapon_Base> DefaultWeapon;

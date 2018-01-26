@@ -12,11 +12,12 @@ void AWeapon_Hitscan::Fire()
 
 		UCameraComponent* PlayerCamera = HoldingPawn->GetFirstPersonCameraComponent();
 
+		FRandomStream RandStream(FMath::Rand());
+
 		float ConeHalfAngle = FMath::DegreesToRadians(HitscanConfig.HipFireSpread * 0.5f);
 
 		FVector StartTrace = PlayerCamera->GetComponentLocation();
-		FVector ShootDir = FVector(0.f, 0.f, 0.f);
-		//FVector ShootDir = FVector(PlayerCamera->GetForwardVector, ConeHalfAngle, ConeHalfAngle);
+		FVector ShootDir = RandStream.VRandCone(PlayerCamera->GetForwardVector(), ConeHalfAngle, ConeHalfAngle);
 		FVector EndTrace = (ShootDir * HitscanConfig.HitscanRange) + StartTrace;
 
 		FHitResult Hit = TraceHit(StartTrace, EndTrace);
@@ -26,6 +27,7 @@ void AWeapon_Hitscan::Fire()
 		if (bHitEnemy)
 		{
 			//show hitmarker
+			//play hitsound
 		}
 	}
 }
@@ -34,10 +36,12 @@ FHitResult AWeapon_Hitscan::TraceHit(FVector StartTrace, FVector EndTrace)
 {
 	FHitResult Hit;
 
-	//FCollisionQueryParams QueryParams;
-	//QueryParams.AddIgnoredActor(HoldingPawn);
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(HoldingPawn);
 
-	//GetWorld()->LineTraceSingleByChannel(Hit, StartTrace, EndTrace, COLLISION_WEAPON, QueryParams);
+	GetWorld()->LineTraceSingleByChannel(Hit, StartTrace, EndTrace, COLLISION_WEAPON, QueryParams);
+
+	DrawDebugLine(GetWorld(), StartTrace, EndTrace, FColor::Red, false, 5.f);
 
 	return Hit;
 }

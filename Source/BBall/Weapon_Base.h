@@ -36,6 +36,7 @@ struct FWeaponConfig
 		EquipTime = 0.2f;
 		HolsterTime = 0.1f;
 		ReloadTime = 2.0f;
+		TimeBetweenShots = 0.8f;
 		BaseFOV = 90;
 	}
 
@@ -62,6 +63,9 @@ struct FWeaponConfig
 
 	UPROPERTY(EditDefaultsOnly, Category = "Timing")
 	float ReloadTime;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Timing")
+	float TimeBetweenShots;
 
 	UPROPERTY(EditDefaultsOnly, Category = "FOV")
 	int32 BaseFOV;
@@ -114,6 +118,12 @@ public:
 
 	/** Actual firing method */
 	virtual void Fire();
+
+	bool bWantsToFire;
+
+	void OnRefire();
+
+	FTimerHandle TimerHandle_RefireTimer;
 
 	void SetHoldingPawn(class ABBallCharacter* character);
 

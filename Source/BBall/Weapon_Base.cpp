@@ -83,11 +83,12 @@ void AWeapon_Base::OnUnEquip()
 void AWeapon_Base::BeginFire()
 {
 	Fire();
+	bWantsToFire = true;
 }
 
 void AWeapon_Base::EndFire()
 {
-
+	bWantsToFire = false;
 }
 
 void AWeapon_Base::Fire()
@@ -99,6 +100,16 @@ void AWeapon_Base::Fire()
 
 	MulticastPlayShootingEffects();
 
+	GetWorldTimerManager().SetTimer(TimerHandle_RefireTimer, this, &AWeapon_Base::OnRefire, WeaponConfig.TimeBetweenShots, false);
+
+}
+
+void AWeapon_Base::OnRefire()
+{
+	if (bWantsToFire)
+	{
+		Fire();
+	}
 }
 
 void AWeapon_Base::MulticastPlayShootingEffects_Implementation()
