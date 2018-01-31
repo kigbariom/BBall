@@ -97,10 +97,23 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	UAnimMontage* HitAnimation;
 
+	UFUNCTION(NetMulticast, Unreliable)
+	void MulticastPlayHitAnim();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void ShowHitmarker();
+
 
 
 public:
+
+	UFUNCTION(Client, Unreliable)
+	void ClientShowHitmarker();
+
 	USkeletalMeshComponent* GetRelevantPlayerMesh() const;
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE bool IsDead() const { return bIsDead; }
 
 	/** Returns Mesh1P subobject **/
 	FORCEINLINE class USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }

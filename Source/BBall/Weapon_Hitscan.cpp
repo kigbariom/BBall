@@ -28,6 +28,7 @@ void AWeapon_Hitscan::Fire()
 
 		if (bHitEnemy)
 		{
+			HoldingPawn->ClientShowHitmarker();
 			//show hitmarker
 			//play hitsound
 		}
@@ -52,7 +53,7 @@ bool AWeapon_Hitscan::ProcessHit(const FHitResult& Hit)
 {
 	if (Hit.GetActor() && HoldingPawn)
 	{
-		FDamageEvent DamageEvent;
+		FDamageEvent DamageEvent; 
 		float DamageDealt = Hit.GetActor()->TakeDamage(HitscanConfig.HitscanDamage, DamageEvent, HoldingPawn->GetController(), this);
 
 		ABBallCharacter* HitEnemy = Cast<ABBallCharacter>(Hit.GetActor());

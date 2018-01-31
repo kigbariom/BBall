@@ -74,6 +74,15 @@ void ABBallCharacter::SpawnDefaultWeapon()
 	}
 }
 
+void ABBallCharacter::MulticastPlayHitAnim_Implementation()
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && HitAnimation)
+	{
+		AnimInstance->Montage_Play(HitAnimation);
+	}
+}
+
 void ABBallCharacter::ServerBeginFire_Implementation()
 {
 	BeginFire();
@@ -206,11 +215,7 @@ float ABBallCharacter::TakeDamage(float Damage, const FDamageEvent & DamageEvent
 
 	if (Health > 0)
 	{
-		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-		if (AnimInstance && HitAnimation)
-		{
-			AnimInstance->Montage_Play(HitAnimation);
-		}
+		MulticastPlayHitAnim();
 	}
 	else
 	{
@@ -248,6 +253,11 @@ void ABBallCharacter::MoveRight(float Value)
 		// add movement in that direction
 		AddMovementInput(GetActorRightVector(), Value);
 	}
+}
+
+void ABBallCharacter::ClientShowHitmarker_Implementation()
+{
+	ShowHitmarker();
 }
 
 USkeletalMeshComponent* ABBallCharacter::GetRelevantPlayerMesh() const
